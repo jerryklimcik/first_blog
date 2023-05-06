@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('restrict')->onUpdate('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('restrict')->onUpdate('cascade');
+
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
+
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->nullOnDelete()->cascadeOnUpdate();
+
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('content');
