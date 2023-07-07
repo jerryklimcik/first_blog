@@ -18,6 +18,7 @@
 				<ul class="flex">
 					<li class="mr-4">
 						<a href="/" class="text-blue-500 hover:text-blue-800">Domů</a>
+						<a href="{{ route('posts.create') }}" class="ms-4 hover:text-blue-800">Nový článek</a>
 					</li>
 				</ul>
 			</div>

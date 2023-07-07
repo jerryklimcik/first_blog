@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -13,7 +14,7 @@ class PostController extends Controller
     public function index()
     {
         return view('posts.index', [
-            'posts' => Post::query()->orderByDesc('created_at')->get()
+            'posts' => Post::query()->orderByDesc('created_at')->get(),
         ]);
     }
 
@@ -22,7 +23,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -30,7 +31,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+        ]);
+
+        $post = new Post();
+        $post->title = $request->input('title');
+        $post->slug = Str::slug($request->input('title'));
+        $post->content = $request->input('content');
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Článek byl úspěšně vytvořen.');
     }
 
     /**
