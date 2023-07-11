@@ -11,6 +11,30 @@
 			@method('PUT')
 
 			<div class="mb-4">
+				<label for="author" class="block text-sm font-bold mb-2">Autor:</label>
+				<select name="author_id" id="author" class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+					@foreach($users as $user)
+						<option value="{{ $user->id }}" {{ $post->user_id === $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+					@endforeach
+				</select>
+				@error('author_id')
+				<span class="text-red-500 text-xs italic">{{ $message }}</span>
+				@enderror
+			</div>
+
+			<div class="mb-4">
+				<label for="category" class="block text-sm font-bold mb-2">Kategorie:</label>
+				<select name="category_id" id="category" class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+					@foreach($categories as $category)
+						<option value="{{ $category->id }}" {{ $post->category_id === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+					@endforeach
+				</select>
+				@error('category_id')
+				<span class="text-red-500 text-xs italic">{{ $message }}</span>
+				@enderror
+			</div>
+
+			<div class="mb-4">
 				<label for="title" class="block text-sm font-bold mb-2">Název článku:</label>
 				<input type="text" name="title" id="title" value="{{ $post->title }}" class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 				@error('title')

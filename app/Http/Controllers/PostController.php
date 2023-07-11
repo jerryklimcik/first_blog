@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -23,7 +25,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $users = User::all();
+        $categories = Category::all();
+        return view('posts.create', compact('users', 'categories'));
     }
 
     /**
@@ -34,12 +38,16 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'author' => 'required|exists:users,id',
+            'category' => 'required|exists:categories,id',
         ]);
 
         $post = new Post();
         $post->title = $request->input('title');
         $post->slug = Str::slug($request->input('title'));
         $post->content = $request->input('content');
+        $post->user_id = $request->input('author');
+        $post->category_id = $request->input('category');
         $post->save();
 
         return redirect()->route('posts.index')->with('success', 'Článek byl úspěšně vytvořen.');
@@ -58,7 +66,10 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        $users = User::all();
+        $categories = Category::all();
+
+        return view('posts.edit', compact('post', 'users', 'categories'));
     }
 
     /**
@@ -66,16 +77,20 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $post = Post::findOrFail($id);
-
         $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'author_id' => 'required|exists:users,id',
+            'category_id' => 'required|exists:categories,id',
         ]);
+
+        $post = Post::findOrFail($id);
 
         $post->title = $request->input('title');
         $post->slug = Str::slug($request->input('title'));
         $post->content = $request->input('content');
+        $post->user_id = $request->input('author_id');
+        $post->category_id = $request->input('category_id');
         $post->save();
 
         return redirect()->route('posts.index')->with('success', 'Článek byl úspěšně upraven.');
